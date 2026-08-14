@@ -1,0 +1,18 @@
+# Credenciais — nunca commitar
+js/config.js
+
+# Ambiente
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
