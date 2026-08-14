@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking — NCC Shield</title>
+  <script>if (localStorage.getItem('ncc-theme') === 'dark') document.documentElement.classList.add('dark');</script>
+  <link rel="stylesheet" href="css/tailwind.css?v=8">
+  <link rel="stylesheet" href="css/styles.css?v=8">
+  <script src="js/vendor/supabase.min.js?v=8"></script>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 min-h-screen antialiased">
+
+  <nav class="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <svg class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg>
+        <span class="font-bold text-slate-900 dark:text-slate-100">NCC Shield</span>
+      </div>
+      <div class="flex items-center gap-1 text-sm">
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium">Painel</a>
+        <a href="ranking.html" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium">Ranking Geral</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="usuario-nome" class="text-sm font-medium text-slate-700 dark:text-slate-300"></span>
+        <button id="btn-tema" type="button" aria-pressed="false"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg data-tema-lua class="hidden w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"/></svg>
+          <svg data-tema-sol class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/></svg>
+        </button>
+        <button id="btn-sair" class="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium">Sair</button>
+        <span id="versao-app" class="text-[11px] text-slate-400 dark:text-slate-500 font-mono" title="Versão do aplicativo (se não mostrar v8, recarregue com Ctrl+F5)">v8</span>
+      </div>
+    </div>
+  </nav>
+
+  <div id="erro-global" role="alert" class="hidden max-w-6xl mx-auto mt-4 px-4">
+    <div class="rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-400 text-sm px-4 py-3"></div>
+  </div>
+
+  <div id="config-error" role="alert" class="hidden max-w-6xl mx-auto mt-4 px-4">
+    <div class="rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-400 text-sm px-4 py-3 flex items-start gap-2">
+      <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+      <span>Configure as chaves do Supabase no arquivo <code class="font-semibold">js/config.js</code> antes de usar o painel.</span>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 md:px-6 py-6 space-y-6">
+
+    <section>
+      <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+        <div>
+          <h2 class="font-semibold text-slate-900 dark:text-slate-100 text-lg">Ranking Geral</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Posições de todos os operadores da empresa no período selecionado.</p>
+        </div>
+        <div class="flex flex-wrap items-end gap-2" id="controle-periodo">
+          <label class="flex flex-col gap-1">
+            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">De</span>
+            <input type="date" id="data-de"
+                   class="h-10 rounded-lg border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+          </label>
+          <label class="flex flex-col gap-1">
+            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Até</span>
+            <input type="date" id="data-ate"
+                   class="h-10 rounded-lg border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+          </label>
+          <button type="button" id="btn-aplicar"
+                  class="min-h-[40px] px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-sm font-semibold transition-colors">
+            Aplicar
+          </button>
+<button type="button" id="btn-hoje"
+                  class="min-h-[40px] px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            Hoje
+          </button>
+          <button type="button" id="btn-semana"
+                  class="min-h-[40px] px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            Semana
+          </button>
+          <button type="button" id="btn-mes"
+                  class="min-h-[40px] px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            Mês
+          </button>
+          <button type="button" id="btn-diagnostico"
+                  class="min-h-[40px] px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            Diagnóstico
+          </button>
+        </div>
+      </div>
+
+      <div id="painel-diagnostico" class="hidden mb-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-4">
+        <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Diagnóstico do banco de dados</p>
+        <pre id="diagnostico-saida" class="text-xs text-slate-600 dark:text-slate-400 whitespace-pre-wrap font-mono"></pre>
+      </div>
+
+      <div id="aviso-dados" role="status" class="hidden mb-4 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm px-4 py-3">
+        <span id="aviso-dados-texto"></span>
+        <button type="button" id="aviso-dados-fechar" class="ml-2 font-semibold underline decoration-amber-500 hover:decoration-amber-700" aria-label="Fechar aviso">fechar</button>
+      </div>
+
+      <div id="ranking-loading" class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 space-y-3">
+        <div class="skeleton h-12 rounded-xl"></div>
+        <div class="skeleton h-12 rounded-xl"></div>
+        <div class="skeleton h-12 rounded-xl"></div>
+        <div class="skeleton h-12 rounded-xl"></div>
+      </div>
+
+      <div id="ranking-box" class="hidden bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="tabela-sticky w-full text-sm">
+            <thead>
+              <tr class="text-left text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                <th class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 py-3 px-4 font-medium w-20">Posição</th>
+                <th class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 py-3 px-4 font-medium">Operador</th>
+                <th class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 py-3 px-4 font-medium text-center">Atendimentos</th>
+                <th class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 py-3 px-4 font-medium text-center">Retidos</th>
+                <th class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 py-3 px-4 font-medium text-center">Cancelados</th>
+                <th class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 py-3 px-4 font-medium text-center">Taxa de Retenção</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-ranking"></tbody>
+          </table>
+        </div>
+        <p id="ranking-vazio" class="hidden text-center text-slate-500 dark:text-slate-400 py-8 text-sm">
+          <span class="block font-medium text-slate-700 dark:text-slate-300">Ainda não há atendimentos no período.</span>
+          Se registrou atendimentos em outro dia, ajuste o período (Hoje / Semana / Mês / Personalizado) e recarregue.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js?v=8"></script>
+  <script src="js/supabaseClient.js?v=8"></script>
+  <script src="js/utils.js?v=8"></script>
+  <script src="js/auth.js?v=8"></script>
+  <script src="js/theme.js?v=8"></script>
+  <script src="js/ranking.js?v=8"></script>
+</body>
+</html>
+

@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — NCC Shield</title>
+  <link rel="stylesheet" href="css/tailwind.css?v=8">
+  <link rel="stylesheet" href="css/styles.css?v=8">
+  <script src="js/vendor/supabase.min.js?v=8"></script>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4 antialiased">
+
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+      <div class="text-center mb-8">
+        <div class="mx-auto w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg>
+        </div>
+        <h1 class="text-2xl font-bold text-slate-900">NCC Shield</h1>
+<p class="text-sm text-slate-500 mt-1">Setor de Retenção e Comissionamento</p>
+        <span id="versao-app" class="text-[11px] text-slate-400 dark:text-slate-500 font-mono mt-1 inline-block" title="Versão do aplicativo (se não mostrar v8, recarregue com Ctrl+F5)">v8</span>
+      </div>
+
+      <div id="config-error" role="alert" class="hidden mb-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3.5 py-2.5">
+        Configuração pendente: preencha as chaves do Supabase em <code class="font-semibold">js/config.js</code>.
+      </div>
+
+      <form id="login-form">
+        <div class="mb-4">
+          <label for="login-email" class="block text-sm font-medium text-slate-700 mb-1.5">E-mail</label>
+          <input type="email" id="login-email" autocomplete="username" required maxlength="254"
+                 class="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                 placeholder="operador@empresa.com">
+        </div>
+
+        <div class="mb-6">
+          <label for="login-senha" class="block text-sm font-medium text-slate-700 mb-1.5">Senha</label>
+          <input type="password" id="login-senha" autocomplete="current-password" required maxlength="72"
+                 class="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                 placeholder="••••••••">
+        </div>
+
+        <div id="login-error" role="alert" aria-live="polite" class="hidden mb-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3.5 py-2.5"></div>
+
+        <button type="submit" id="login-submit"
+                class="w-full inline-flex items-center justify-center gap-2 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors">
+          <span id="login-spinner" class="spinner hidden"></span>
+          <span id="login-label">Entrar</span>
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-slate-400 mt-6">Acesso restrito. Contas são criadas apenas pela administração.</p>
+    </div>
+  </div>
+
+  <script src="js/config.js?v=8"></script>
+  <script src="js/supabaseClient.js?v=8"></script>
+  <script src="js/utils.js?v=8"></script>
+  <script src="js/login.js?v=8"></script>
+</body>
+</html>
+
+
+
+
+
+
+

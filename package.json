@@ -1,0 +1,16 @@
+{
+  "name": "ncc-shield",
+  "version": "1.0.0",
+  "description": "Sistema web de **retenção e comissionamento** para telemarketing, integrado ao **Supabase** (Autenticação + PostgreSQL + RLS).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}
